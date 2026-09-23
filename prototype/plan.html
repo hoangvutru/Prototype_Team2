@@ -9,67 +9,377 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ── Plan page overrides ── */
+  .plan-status-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .plan-status-row .sep{width:1px;height:20px;background:var(--border-strong);flex:none}
+
+  /* Toolbar redesign */
+  .plan-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+  .plan-toolbar .tb-group{display:flex;align-items:center;gap:6px}
+  .plan-toolbar .tb-sep{width:1px;height:28px;background:var(--border-strong);flex:none}
+  .plan-toolbar .tb-spacer{flex:1}
+  .tb-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2);color:var(--muted);font:600 12.5px/1 var(--sans);cursor:pointer;white-space:nowrap;transition:.13s}
+  .tb-btn:hover{background:var(--sunken);color:var(--ink-2);border-color:var(--border-strong)}
+  .tb-btn svg{width:15px;height:15px;stroke-width:2;flex:none}
+  .tb-btn.ai{color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:var(--accent-tint)}
+  .tb-btn.ai:hover{filter:brightness(1.08)}
+  .tb-btn.ver{color:var(--violet-ink);border-color:color-mix(in srgb,var(--violet) 35%,transparent)}
+  .tb-btn.ver:hover{background:var(--violet-tint)}
+  .tb-group-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);padding:0 4px;white-space:nowrap}
+
+  /* Section headers */
+  .plan-section{margin-bottom:20px}
+  .plan-section-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .plan-section-head .sh-ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+  .plan-section-head .sh-ic svg{width:15px;height:15px;stroke-width:2.2}
+  .plan-section-head h2{font-size:13.5px;color:var(--ink-2)}
+  .plan-section-head .sh-hint{font-size:11.5px;color:var(--faint);margin-left:auto}
+
+  /* 2-column content grid */
+  .plan-content-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:20px;align-items:start}
+  @media(max-width:860px){.plan-content-grid{grid-template-columns:1fr}}
+
+  /* Right column stack */
+  .plan-right-col{display:flex;flex-direction:column;gap:14px}
+
+  /* Metric mini cards */
+  .metric-row{display:flex;gap:10px}
+  .metric-mini{flex:1;border:1px solid var(--border);border-radius:10px;padding:11px 13px;background:var(--surface)}
+  .metric-mini .mn{font-size:11px;color:var(--faint);font-weight:600;margin-bottom:4px}
+  .metric-mini .mv{font-size:18px;font-weight:800;color:var(--primary-ink);line-height:1;margin-bottom:6px}
+  .metric-mini .spark{display:flex;align-items:flex-end;gap:2px;height:20px}
+  .metric-mini .spark i{flex:1;background:var(--primary);border-radius:2px;opacity:.8}
+
+  /* Evidence matrix compact */
+  .ematrix-compact{display:grid;gap:5px;font-size:11.5px}
+  .ematrix-compact .er{display:grid;grid-template-columns:90px repeat(3,1fr);gap:5px;align-items:center}
+  .ematrix-compact .eh{color:var(--faint);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.04em;text-align:center}
+  .ematrix-compact .lab{color:var(--muted);font-weight:500;font-size:11px}
+  .ematrix-compact .cell{height:26px;border:1px dashed var(--border);border-radius:6px;display:grid;place-items:center}
+  .ematrix-compact .cell.hit{border-style:solid;border-color:var(--primary);background:var(--primary-tint)}
+  .ematrix-compact .cell .dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+
+  /* Scope banner slim */
+  .scope-banner-slim{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;background:var(--green-tint);border:1px solid color-mix(in srgb,var(--green) 40%,transparent);color:var(--green-ink);font-size:12.5px;font-weight:700}
+  .scope-banner-slim svg{width:15px;height:15px;stroke-width:2.5}
+
+  /* Plan fields stack */
+  .plan-fields{display:flex;flex-direction:column;gap:14px}
+  .plan-fields .field{margin:0}
+  .plan-fields .field textarea{min-height:80px}
+
+  /* ── Floating chat widget ── */
+  .chat-fab{
+    position:fixed; bottom:28px; right:28px; z-index:200;
+    width:52px; height:52px; border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    border:none; cursor:pointer;
+    display:grid; place-items:center;
+    box-shadow:0 4px 20px rgba(92,168,255,.45), 0 2px 8px rgba(0,0,0,.4);
+    transition:transform .2s, box-shadow .2s;
+  }
+  .chat-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(92,168,255,.6),0 2px 10px rgba(0,0,0,.4)}
+  .chat-fab svg{width:22px;height:22px;stroke-width:2;color:#fff}
+  .chat-fab .fab-badge{
+    position:absolute; top:-2px; right:-2px;
+    width:18px; height:18px; border-radius:50%;
+    background:var(--primary); color:#1a1206;
+    font:700 9px/18px var(--sans);
+    text-align:center;
+    border:2px solid var(--ground);
+    pointer-events:none;
+  }
+
+  .chat-popup{
+    position:fixed; bottom:92px; right:24px; z-index:199;
+    width:360px; max-width:calc(100vw - 32px);
+    background:var(--surface);
+    border:1px solid var(--border-strong);
+    border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.55), 0 4px 16px rgba(0,0,0,.3);
+    overflow:hidden;
+    transform-origin:bottom right;
+    transform:scale(.92) translateY(12px);
+    opacity:0;
+    pointer-events:none;
+    transition:transform .22s cubic-bezier(.34,1.56,.64,1), opacity .18s ease;
+  }
+  .chat-popup.open{
+    transform:scale(1) translateY(0);
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .chat-popup-header{
+    display:flex; align-items:center; gap:10px;
+    padding:13px 14px;
+    background:var(--sunken);
+    border-bottom:1px solid var(--border);
+  }
+  .chat-popup-header .agent-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex:none;animation:pulse-dot 2s infinite}
+  @keyframes pulse-dot{0%,100%{box-shadow:0 0 4px var(--green)}50%{box-shadow:0 0 10px var(--green)}}
+  .chat-popup-header .agent-name{font-size:13px;font-weight:700;color:var(--ink-2)}
+  .chat-popup-header .agent-sub{font-size:11px;color:var(--faint)}
+  .chat-popup-header .close-chat{
+    margin-left:auto; width:26px; height:26px; border-radius:7px;
+    border:1px solid var(--border); background:transparent; color:var(--muted);
+    display:grid; place-items:center; cursor:pointer; transition:.13s;
+  }
+  .chat-popup-header .close-chat:hover{background:var(--surface-2);color:var(--ink-2)}
+  .chat-popup-header .close-chat svg{width:13px;height:13px;stroke-width:2.5}
+
+  .chat-popup-body{padding:12px 14px}
+  .chat-popup-body .chat{max-height:220px}
+
+  /* Quick action pills */
+  .quick-actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .quick-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:var(--surface-2);color:var(--muted);font:600 11px/1 var(--sans);cursor:pointer;transition:.13s;white-space:nowrap}
+  .quick-btn:hover{background:var(--primary-tint);color:var(--primary-ink);border-color:color-mix(in srgb,var(--primary) 40%,transparent)}
+  .quick-btn svg{width:12px;height:12px;stroke-width:2.2}
+</style>
 </head>
 <body data-role="student" data-active="plan" data-title="Kế hoạch dự án (Capstone Plan)">
   <main class="page-content">
-    <!-- toolbar -->
-    <div class="toolbar" style="margin-bottom:16px">
-      <button onclick="toast('Bản mẫu: bật chế độ sửa')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Sửa</button>
-      <button class="key" onclick="toast('Trợ lý Thiết kế: mình có thể giúp chuẩn hoá ý tưởng, chia mốc và gợi ý chỉ số đo được.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Hỏi trợ lý</button>
-      <button class="key" onclick="toast('Project Design Agent: đã tạo bản nháp')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg>Tạo nháp</button>
-      <button onclick="go('agent-review.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Kiểm tra phạm vi</button>
-      <button onclick="toast('Đang kiểm tra nhất quán…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Nhất quán</button>
-      <button onclick="toast('Bản mẫu: lưu nháp')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Lưu nháp</button>
-      <button class="key" onclick="confirmVersion()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>Tạo phiên bản</button>
-      <button onclick="go('versions.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>Xem phiên bản</button>
-      <button class="key" onclick="go('approval.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>Gửi GV</button>
-      <button onclick="go('dashboard.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Quay lại</button>
+
+    <!-- ① STATUS ROW -->
+    <div class="plan-status-row">
+      <span class="vchip"><span class="dot"></span>Phiên bản v3 · Nháp</span>
+      <span class="scope-banner-slim">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg>
+        Hợp lệ — trong phạm vi Capstone
+      </span>
+      <div class="sep"></div>
+      <span class="badge b-brand">2 nhận xét AI chờ xem</span>
+      <span class="badge b-needs">1 cảnh báo an toàn</span>
     </div>
 
-    <div class="scope-banner" style="margin-bottom:18px">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg>
-      Yêu cầu hợp lệ — thuộc phạm vi Capstone
-    </div>
-
-    <div class="row" style="margin-bottom:18px">
-      <div class="field" style="flex:1;min-width:240px;margin:0"><label>Mục tiêu (Objective)</label><textarea>Xây hệ thống camera nhận diện hành vi xả rác và gửi cảnh báo theo thời gian thực trong khuôn viên trường.</textarea></div>
-      <div class="field" style="flex:1;min-width:240px;margin:0"><label>Phạm vi (Scope boundaries)</label><textarea>Thử nghiệm tại 2 khu vực sân trường; không xử lý dữ liệu ngoài trường; không nhận diện danh tính cá nhân.</textarea></div>
-    </div>
-
-    <div class="row" data-nowrap style="flex-wrap:nowrap;align-items:stretch">
-      <!-- Milestones -->
-      <div class="card" style="flex:1.4;min-width:280px;overflow:hidden">
-        <div class="card-pad" style="padding-bottom:6px"><div class="eyebrow">Mốc tiến độ (Milestones)</div></div>
-        <div style="overflow-x:auto"><table class="tbl">
-          <thead><tr><th>Tên mốc</th><th>Hạn</th><th>Trạng thái</th></tr></thead>
-          <tbody>
-            <tr><td>M1 · Thu thập &amp; gán nhãn dữ liệu</td><td class="mono">14/08</td><td><span class="badge b-pass"><span class="bd"></span>Hoàn tất</span></td></tr>
-            <tr><td>M2 · Huấn luyện mô hình</td><td class="mono">18/09</td><td><span class="badge b-brand">Đang làm</span></td></tr>
-            <tr><td>M3 · Tích hợp &amp; thử nghiệm</td><td class="mono">04/12</td><td><span class="badge b-unchecked"><span class="bd"></span>Chưa bắt đầu</span></td></tr>
-          </tbody>
-        </table></div>
+    <!-- ② TOOLBAR (3 nhóm + primary CTA) -->
+    <div class="plan-toolbar">
+      <span class="tb-group-label">AI</span>
+      <div class="tb-group">
+        <button class="tb-btn ai" onclick="toast('Trợ lý Thiết kế: mình có thể giúp chuẩn hoá ý tưởng, chia mốc và gợi ý chỉ số đo được.')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Hỏi trợ lý
+        </button>
+        <button class="tb-btn ai" onclick="toast('Project Design Agent: đã tạo bản nháp')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg>Tạo nháp
+        </button>
       </div>
-      <!-- Metrics -->
-      <div class="card card-pad" style="flex:1;min-width:200px">
-        <div class="eyebrow" style="margin-bottom:12px">Chỉ số (Metrics)</div>
-        <div class="stack" style="gap:10px">
-          <div class="metric-card"><div class="mn">Độ chính xác</div><div class="mv">&gt; 90%</div><div class="spark"><i style="height:40%"></i><i style="height:55%"></i><i style="height:50%"></i><i style="height:70%"></i><i style="height:85%"></i><i style="height:95%"></i></div></div>
-          <div class="metric-card"><div class="mn">Độ trễ phát hiện</div><div class="mv">&lt; 2s</div><div class="spark"><i style="height:90%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:50%"></i><i style="height:40%"></i><i style="height:35%"></i></div></div>
+      <div class="tb-sep"></div>
+      <span class="tb-group-label">Kiểm tra</span>
+      <div class="tb-group">
+        <button class="tb-btn" onclick="go('agent-review.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Phạm vi
+        </button>
+        <button class="tb-btn" onclick="toast('Đang kiểm tra nhất quán…')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Nhất quán
+        </button>
+      </div>
+      <div class="tb-sep"></div>
+      <span class="tb-group-label">Phiên bản</span>
+      <div class="tb-group">
+        <button class="tb-btn" onclick="toast('Bản mẫu: lưu nháp')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Lưu nháp
+        </button>
+        <button class="tb-btn ver" onclick="confirmVersion()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>Tạo v4
+        </button>
+        <button class="tb-btn ver" onclick="go('versions.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>Lịch sử
+        </button>
+      </div>
+      <div class="tb-spacer"></div>
+      <button class="btn btn-primary" onclick="go('approval.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px;height:15px"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
+        Gửi GV phê duyệt
+      </button>
+    </div>
+
+    <!-- ③ THÔNG TIN DỰ ÁN (stack dọc) -->
+    <div class="plan-section">
+      <div class="plan-section-head">
+        <div class="sh-ic" style="background:var(--primary-tint);color:var(--primary-ink)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <h2>Thông tin kế hoạch</h2>
+        <button class="tb-btn" style="margin-left:auto" onclick="toast('Bản mẫu: bật chế độ sửa')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Chỉnh sửa
+        </button>
+      </div>
+      <div class="card card-pad">
+        <div class="plan-fields">
+          <div class="field">
+            <label>Mục tiêu dự án (Objective)</label>
+            <textarea>Xây hệ thống camera nhận diện hành vi xả rác và gửi cảnh báo theo thời gian thực trong khuôn viên trường.</textarea>
+          </div>
+          <div class="field">
+            <label>Phạm vi (Scope boundaries)</label>
+            <textarea>Thử nghiệm tại 2 khu vực sân trường; không xử lý dữ liệu ngoài trường; không nhận diện danh tính cá nhân.</textarea>
+          </div>
         </div>
       </div>
-      <!-- Evidence map -->
-      <div class="card card-pad" style="flex:1.1;min-width:230px">
-        <div class="eyebrow" style="margin-bottom:12px">Evidence Map</div>
-        <div class="ematrix">
-          <div class="er"><div></div><div class="eh">Mục tiêu 1</div><div class="eh">Mục tiêu 2</div><div class="eh">Mục tiêu 3</div></div>
-          <div class="er"><div class="lab">Tài liệu</div><div class="cell hit"><span class="dot"></span></div><div class="cell"></div><div class="cell hit"><span class="dot"></span></div></div>
-          <div class="er"><div class="lab">Mã nguồn</div><div class="cell"></div><div class="cell hit"><span class="dot"></span></div><div class="cell"></div></div>
-          <div class="er"><div class="lab">Kết quả</div><div class="cell hit"><span class="dot"></span></div><div class="cell hit"><span class="dot"></span></div><div class="cell"></div></div>
+    </div>
+
+    <!-- ④ CONTENT GRID: 2 cột -->
+    <div class="plan-content-grid">
+
+      <!-- Cột trái: Milestones -->
+      <div class="card" style="overflow:hidden">
+        <div class="card-pad" style="padding-bottom:6px">
+          <div class="plan-section-head" style="margin-bottom:0">
+            <div class="sh-ic" style="background:var(--accent-tint);color:var(--accent-ink)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+            </div>
+            <h2>Mốc tiến độ</h2>
+            <span class="sh-hint">3 mốc · 1 đang làm</span>
+          </div>
         </div>
-        <div class="callout grey" style="padding:10px;margin-top:12px;font-size:12px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>AI chỉ tạo bản nháp liên kết; không tự xác nhận minh chứng đã đạt tiêu chí.</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Tên mốc</th><th>Hạn</th><th>Trạng thái</th><th></th></tr></thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="font-weight:600;color:var(--ink-2)">M1 · Thu thập &amp; gán nhãn dữ liệu</div>
+                  <div style="font-size:11.5px;color:var(--faint);margin-top:2px">Tập 2 000 ảnh đã gán nhãn xả rác / không xả rác</div>
+                </td>
+                <td class="mono">14/08</td>
+                <td><span class="badge b-pass"><span class="bd"></span>Hoàn tất</span></td>
+                <td><button class="tb-btn" style="padding:4px 9px;font-size:11px" onclick="toast('Xem minh chứng M1')">↗</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;color:var(--ink-2)">M2 · Huấn luyện mô hình</div>
+                  <div style="font-size:11.5px;color:var(--faint);margin-top:2px">YOLOv8 fine-tune, đạt ≥ 90% accuracy trên tập kiểm thử</div>
+                </td>
+                <td class="mono">18/09</td>
+                <td><span class="badge b-brand">Đang làm</span></td>
+                <td><button class="tb-btn" style="padding:4px 9px;font-size:11px" onclick="toast('Xem tiến độ M2')">↗</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;color:var(--ink-2)">M3 · Tích hợp &amp; thử nghiệm thực tế</div>
+                  <div style="font-size:11.5px;color:var(--faint);margin-top:2px">Triển khai tại 2 khu vực sân, đo độ trễ live &lt; 2s</div>
+                </td>
+                <td class="mono">04/12</td>
+                <td><span class="badge b-unchecked"><span class="bd"></span>Chưa bắt đầu</span></td>
+                <td><button class="tb-btn" style="padding:4px 9px;font-size:11px;opacity:.45;cursor:not-allowed">↗</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Cột phải: Metrics + Evidence Map -->
+      <div class="plan-right-col">
+
+        <div class="card card-pad">
+          <div class="plan-section-head" style="margin-bottom:12px">
+            <div class="sh-ic" style="background:var(--primary-tint);color:var(--primary-ink)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h2>Chỉ số đo lường</h2>
+          </div>
+          <div class="metric-row">
+            <div class="metric-mini">
+              <div class="mn">Độ chính xác</div>
+              <div class="mv">&gt; 90%</div>
+              <div class="spark"><i style="height:40%"></i><i style="height:55%"></i><i style="height:50%"></i><i style="height:70%"></i><i style="height:85%"></i><i style="height:95%"></i></div>
+            </div>
+            <div class="metric-mini">
+              <div class="mn">Độ trễ phát hiện</div>
+              <div class="mv">&lt; 2s</div>
+              <div class="spark"><i style="height:90%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:50%"></i><i style="height:40%"></i><i style="height:35%"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="plan-section-head" style="margin-bottom:12px">
+            <div class="sh-ic" style="background:var(--violet-tint);color:var(--violet-ink)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+            </div>
+            <h2>Evidence Map</h2>
+          </div>
+          <div class="ematrix-compact">
+            <div class="er"><div></div><div class="eh">MT 1</div><div class="eh">MT 2</div><div class="eh">MT 3</div></div>
+            <div class="er"><div class="lab">Tài liệu</div><div class="cell hit"><span class="dot"></span></div><div class="cell"></div><div class="cell hit"><span class="dot"></span></div></div>
+            <div class="er"><div class="lab">Mã nguồn</div><div class="cell"></div><div class="cell hit"><span class="dot"></span></div><div class="cell"></div></div>
+            <div class="er"><div class="lab">Kết quả</div><div class="cell hit"><span class="dot"></span></div><div class="cell hit"><span class="dot"></span></div><div class="cell"></div></div>
+          </div>
+          <div class="callout grey" style="padding:9px 12px;margin-top:12px;font-size:11.5px">
+            <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px;height:15px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <div>AI chỉ tạo bản nháp liên kết — không tự xác nhận minh chứng đã đạt.</div>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <!-- ⑤ FLOATING CHAT WIDGET (inside .page-content so app.js shell keeps it) -->
+    <!-- FAB button -->
+    <button class="chat-fab" id="chatFab" onclick="toggleChatPopup()" aria-label="Mở trợ lý thiết kế">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" id="fabIcon">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span class="fab-badge">1</span>
+    </button>
+
+    <!-- Chat popup panel -->
+    <div class="chat-popup" id="chatPopup">
+      <div class="chat-popup-header">
+        <span class="agent-dot"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px;height:15px;color:var(--accent-ink);stroke-width:2"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg>
+        <span class="agent-name">Project Design Agent</span>
+        <span class="agent-sub">· Thiết kế kế hoạch</span>
+        <button class="close-chat" onclick="toggleChatPopup()" aria-label="Đóng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="chat-popup-body">
+        <div class="quick-actions">
+          <button class="quick-btn" onclick="quickDesign('metric')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Đề xuất chỉ số
+          </button>
+          <button class="quick-btn" onclick="quickDesign('oos')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>Test ngoài phạm vi
+          </button>
+          <button class="quick-btn" onclick="toast('Trợ lý: đang gợi ý chia nhỏ mốc tiến độ...')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Chia nhỏ mốc
+          </button>
+        </div>
+        <div class="chat" id="designChat">
+          <div class="msg ai">
+            <div class="who">Project Design Agent <span class="badge b-teal" style="font-size:10px;padding:1px 7px">Thiết kế</span></div>
+            Xin chào! Mình là trợ lý hỗ trợ thiết kế kế hoạch. Mình có thể giúp bạn chuẩn hoá mục tiêu, chia mốc tiến độ, hoặc gợi ý chỉ số đo được.
+          </div>
+        </div>
+        <div class="composer" style="margin-top:10px">
+          <input id="designInput" placeholder="Hỏi trợ lý thiết kế…"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDesign()}">
+          <button class="btn btn-accent btn-sm" onclick="sendDesign()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
   </main>
   <script src="assets/app.js"></script>
+  <script>
+    var _popupOpen = false;
+    function toggleChatPopup() {
+      _popupOpen = !_popupOpen;
+      var popup = document.getElementById('chatPopup');
+      var badge = document.querySelector('.fab-badge');
+      var fabIcon = document.getElementById('fabIcon');
+      popup.classList.toggle('open', _popupOpen);
+      fabIcon.innerHTML = _popupOpen
+        ? '<path d="M18 6L6 18M6 6l12 12"/>'
+        : '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>';
+      if (badge) badge.style.display = _popupOpen ? 'none' : '';
+      if (_popupOpen) setTimeout(function(){ var inp=document.getElementById('designInput'); if(inp) inp.focus(); }, 250);
+    }
+  </script>
 </body>
 </html>
