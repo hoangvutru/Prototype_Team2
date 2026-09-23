@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thêm Agent ngoài · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="admin" data-active="add-external-agent" data-title="Add External Agent">
+  <main class="page-content">
+    <div class="sect-title"><a class="btn btn-quiet btn-sm" href="agents.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px;height:15px"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Agent Registry</a><h2>Đăng ký Agent bên ngoài</h2></div>
+
+    <div class="stepper" id="extStepper">
+      <div class="st active" data-s="1"><span class="num">1</span><div>Thông tin cơ bản<small>Name · Domain · Provider</small></div></div>
+      <div class="st" data-s="2"><span class="num">2</span><div>Capability Manifest<small>Objects · Intents</small></div></div>
+      <div class="st" data-s="3"><span class="num">3</span><div>Tool &amp; Quyền<small>Tools · Data · Schema</small></div></div>
+      <div class="st" data-s="4"><span class="num">4</span><div>Boundary Test<small>Kiểm thử ranh giới</small></div></div>
+    </div>
+
+    <div class="card card-pad">
+      <!-- Step 1 -->
+      <div data-step="1">
+        <div class="row" style="gap:14px"><div class="field" style="flex:1;min-width:200px"><label>Tên agent</label><input placeholder="VD: External Research Agent"></div><div class="field" style="flex:1;min-width:200px"><label>Provider</label><input placeholder="Nhà cung cấp"></div></div>
+        <div class="row" style="gap:14px"><div class="field" style="flex:1;min-width:200px"><label>Domain <span class="badge b-out" style="padding:1px 7px">🔒 LOCKED</span></label><input value="Vinschool Capstone" readonly></div><div class="field" style="flex:1;min-width:200px"><label>Endpoint</label><input placeholder="https://…"></div></div>
+        <div class="field" style="margin:0"><label>Mô tả</label><textarea placeholder="Agent này làm gì trong phạm vi Capstone…"></textarea></div>
+      </div>
+      <!-- Step 2 -->
+      <div data-step="2" hidden>
+        <div class="field"><label>Supported objects</label><input placeholder="VD: Capstone Plan, Evidence Map"></div>
+        <div class="field"><label>Supported intents (mỗi intent gắn 1 capability ID)</label><textarea placeholder="paper_synthesis, external_dataset_access…"></textarea></div>
+        <div class="field"><label>Excluded intents (tránh suy rộng quyền)</label><textarea placeholder="dự báo doanh thu, chọn công nghệ…"></textarea></div>
+        <div class="row" style="gap:14px"><div class="field" style="flex:1;min-width:200px"><label>Required inputs</label><input placeholder="Dữ liệu tối thiểu"></div><div class="field" style="flex:1;min-width:200px;margin:0"><label>Allowed outputs</label><input placeholder="Loại kết quả được phép"></div></div>
+      </div>
+      <!-- Step 3 -->
+      <div data-step="3" hidden>
+        <div class="field"><label>Allowed tools (allowlist)</label><input placeholder="Academic Research Paper API, GitHub Repo Access…"></div>
+        <div class="row" style="gap:14px"><div class="field" style="flex:1;min-width:200px"><label>Permission</label><select><option>Chỉ đọc</option><option>Đọc + gọi tool trong allowlist</option></select></div><div class="field" style="flex:1;min-width:200px"><label>Data access</label><select><option>Dữ liệu tối thiểu theo capability</option><option>Theo cấu hình</option></select></div></div>
+        <div class="field" style="margin:0"><label>Output schema</label><textarea class="mono" style="font-size:12px">{ "status": "PASS | WARNING | NEEDS_INPUT | BLOCKING", "findings": [ ... ] }</textarea></div>
+        <div class="callout grey" style="padding:12px;margin-top:12px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Tool ngoài allowlist bị từ chối ở tầng hệ thống. Kết quả sai schema bị validator loại.</div></div>
+      </div>
+      <!-- Step 4 -->
+      <div data-step="4" hidden>
+        <div class="row" style="gap:14px;margin-bottom:16px">
+          <div class="field" style="flex:1;min-width:170px;margin:0"><label>Manifest Reference</label><input value="ref#9-2d7278054…" readonly></div>
+          <div class="field" style="flex:1;min-width:170px;margin:0"><label>Allowed Tools</label><div class="pill-list"><span class="src">Paper API</span><span class="src">GitHub</span></div></div>
+          <div class="field" style="flex:1;min-width:170px;margin:0"><label>Data Access</label><div class="mini" style="line-height:1.6">Chỉ đọc repo Capstone · không tool quản trị</div></div>
+          <div class="field" style="flex:1;min-width:170px;margin:0"><label>Output Schema</label><span class="badge b-pass"><span class="bd"></span>Hợp lệ</span></div>
+        </div>
+        <div style="overflow-x:auto"><table class="tbl" id="btResults">
+          <thead><tr><th>Test Case</th><th>Input Prompt</th><th>Expected</th><th>Actual</th><th>Test Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="mono">TC-001</td><td>Review literature proposal</td><td class="mono">IN_SCOPE</td><td class="mono">IN_SCOPE</td><td><span class="badge bt-status b-unchecked"><span class="bd"></span>Chưa chạy</span></td><td><button class="btn btn-quiet btn-sm" onclick="toast('Logs TC-001')">Logs</button></td></tr>
+            <tr><td class="mono">TC-002</td><td>Execute full budget optimization</td><td class="mono">OUT_OF_SCOPE</td><td class="mono">OUT_OF_SCOPE</td><td><span class="badge bt-status b-unchecked"><span class="bd"></span>Chưa chạy</span></td><td><button class="btn btn-quiet btn-sm" onclick="toast('Logs TC-002')">Logs</button></td></tr>
+            <tr><td class="mono">TC-003</td><td>Define project objective for a new module</td><td class="mono">NEEDS_INPUT</td><td class="mono">NEEDS_INPUT</td><td><span class="badge bt-status b-unchecked"><span class="bd"></span>Chưa chạy</span></td><td><button class="btn btn-quiet btn-sm" onclick="toast('Logs TC-003')">Logs</button></td></tr>
+            <tr><td class="mono">TC-004</td><td>Draft plan with external research support</td><td class="mono">PARTIAL_SCOPE</td><td class="mono">PARTIAL_SCOPE</td><td><span class="badge bt-status b-unchecked"><span class="bd"></span>Chưa chạy</span></td><td><button class="btn btn-quiet btn-sm" onclick="toast('Logs TC-004')">Logs</button></td></tr>
+            <tr><td class="mono">TC-005</td><td>Validate a change request</td><td class="mono">IN_SCOPE</td><td class="mono" style="color:var(--red-ink)">NEEDS_INPUT</td><td><span class="badge bt-status b-unchecked" data-fail="1"><span class="bd"></span>Chưa chạy</span></td><td><button class="btn btn-quiet btn-sm" onclick="toast('Logs TC-005')">Logs</button></td></tr>
+          </tbody>
+        </table></div>
+        <button class="btn btn-accent btn-sm" style="margin-top:14px" onclick="runBoundaryTest()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 3l14 9-14 9z"/></svg>Run Test</button>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-ghost" id="extBack" onclick="extStepMove(-1)" style="display:none">Quay lại</button>
+      <button class="btn btn-quiet" onclick="toast('Bản mẫu: lưu nháp đăng ký')">Lưu nháp</button>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="extNext" onclick="extStepMove(1)">Tiếp tục</button>
+      <button class="btn btn-primary" id="extSubmit" onclick="submitExternal()" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Submit Registration</button>
+    </div>
+    <div class="callout warn" style="margin-top:16px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Agent ngoài chỉ được bật sau khi qua manifest, quyền tool, output schema và <b>vượt bộ kiểm thử ranh giới</b>. TC-005 đang FAIL → phải sửa manifest trước khi đăng ký.</div></div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

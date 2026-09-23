@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiến độ & minh chứng · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="student" data-active="progress" data-title="Tiến độ & minh chứng">
+  <main class="page-content">
+    <div class="sect-title"><h2>Tiến độ &amp; minh chứng</h2><span class="hint">Nộp báo cáo và tệp minh chứng theo từng mốc</span></div>
+    <div class="row" data-nowrap style="align-items:flex-start;flex-wrap:nowrap">
+      <div class="card card-pad stack" style="flex:1;min-width:280px;gap:12px">
+        <div class="eyebrow">Mốc 2 · Huấn luyện mô hình</div>
+        <div class="field" style="margin:0"><label>Báo cáo tiến độ (em tự ghi)</label><textarea>Đã huấn luyện xong mô hình v1, độ chính xác ~82% trên tập kiểm thử nội bộ.</textarea></div>
+        <div class="evi"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div class="ei"><div class="en">bao-cao-moc-2.pdf</div><div class="em">1.2 MB · tải lên hôm nay</div></div><span class="badge b-teal"><span class="bd"></span>Đã phát hiện minh chứng</span></div>
+        <div class="evi" style="border-style:dashed;background:var(--surface-2)"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></div><div class="ei"><div class="en" style="color:var(--muted)">Kéo thả tệp minh chứng (ảnh, video, bảng tính…)</div><div class="em">Agent sẽ tự phát hiện &amp; gắn với mốc</div></div><button class="btn btn-ghost btn-sm" onclick="toast('Bản mẫu: chọn tệp minh chứng')">Chọn tệp</button></div>
+        <button class="btn btn-primary" style="align-self:flex-start" onclick="toast('Bản mẫu: đã nộp báo cáo — trạng thái Student Reported')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>Nộp báo cáo mốc</button>
+      </div>
+      <div class="card card-pad stack" style="flex:0 0 320px;max-width:100%;gap:0">
+        <div class="eyebrow" style="margin-bottom:10px">Evidence Map</div>
+        <div class="kv"><span class="k">M1 · Thu thập dữ liệu</span><span class="badge b-pass"><span class="bd"></span>Đủ minh chứng</span></div>
+        <div class="kv"><span class="k">M2 · Huấn luyện</span><span class="badge b-needs"><span class="bd"></span>Thiếu 1 mục</span></div>
+        <div class="kv"><span class="k">M3 · Tích hợp</span><span class="badge b-unchecked"><span class="bd"></span>Chưa tới</span></div>
+        <div class="divider" style="margin:12px 0"></div>
+        <div class="callout grey" style="padding:12px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Thiếu minh chứng <b>không đồng nghĩa</b> chưa làm. Chỉ giáo viên mới xác nhận "Teacher Verified".</div></div>
+      </div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

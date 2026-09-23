@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kết quả chạy · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="admin" data-active="run-result" data-title="Kết quả chạy (chi tiết kỹ thuật)">
+  <main class="page-content">
+    <div class="toolbar" style="margin-bottom:16px">
+      <a href="workspace.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to Chat</a>
+      <button onclick="toast('Bản mẫu: xem input')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h10"/></svg>View Input</button>
+      <button onclick="toast('Bản mẫu: xem phản hồi AI')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg>View AI</button>
+      <button onclick="toast('Bản mẫu: xem tool')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>View Tools</button>
+      <button onclick="toast('Bản mẫu: xem minh chứng')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>View Evidence</button>
+      <button class="key" onclick="toast('Bản mẫu: chạy lại')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg>Run Again</button>
+      <button onclick="toast('Bản mẫu: xuất kết quả')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export</button>
+    </div>
+
+    <div class="sect-title"><h2>Chi tiết lần chạy</h2><label style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-weight:600">Mô phỏng agent tắt<span class="switch"><input type="checkbox" aria-label="Mô phỏng agent tắt" onchange="toggleResultOff(this.checked)"><span class="sl"></span></span></label></div>
+
+    <div id="resContent">
+      <div class="rescol">
+        <!-- Request Analysis -->
+        <div class="card card-pad">
+          <div class="colh">Request Analysis</div>
+          <div class="mini" style="line-height:1.5;margin-bottom:12px">"Nhóm tôi có đủ kỹ năng và camera trống ở tuần 3 không?"</div>
+          <div class="kv"><span class="k">Domain</span><span class="v">Vinschool Capstone</span></div>
+          <div class="kv"><span class="k">Object</span><span class="v">Hồ sơ nhóm · Lịch</span></div>
+          <div class="kv"><span class="k">Intent</span><span class="v mono" style="font-size:11px">schedule_feasibility_check</span></div>
+          <div class="divider" style="margin:10px 0"></div>
+          <div class="eyebrow" style="margin-bottom:8px">Lịch sử</div>
+          <div class="mini" style="line-height:1.9">• Perform capability check…<br>• Check camera availability…<br>• Verify week-3 schedule…</div>
+        </div>
+        <!-- Execution Details -->
+        <div class="card card-pad">
+          <div class="colh">Execution Details</div>
+          <div class="flow" style="margin-bottom:6px">
+            <div class="node on">Scope Guard <small>IN_SCOPE</small></div><div class="arw on"></div>
+            <div class="node on">Active Agent <small>Feasibility</small></div><div class="arw on"></div>
+            <div class="node on">Tools <small>Availability Calendar · Student Profile</small></div>
+          </div>
+          <div class="divider" style="margin:12px 0"></div>
+          <div class="eyebrow" style="margin-bottom:8px">Active capabilities</div>
+          <div class="pill-list"><span class="src mono">schedule_feasibility_check</span><span class="src mono">device_availability_analysis</span></div>
+        </div>
+        <!-- Result Summary -->
+        <div class="card card-pad">
+          <div class="colh">Result Summary <span class="badge b-needs" style="margin-left:6px"><span class="bd"></span>Hỗ trợ, không phải quyết định</span></div>
+          <div class="quad" style="margin-bottom:14px">
+            <div class="qbox pass"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>PASS</h4><ul><li>Kỹ năng gán nhãn đủ</li><li>Tiêu chí kỹ thuật đạt</li></ul></div>
+            <div class="qbox warn"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>WARNING</h4><ul><li>Workload có thể vượt thời gian</li><li>Nên giảm phạm vi</li></ul></div>
+            <div class="qbox needs"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>NEEDS_INPUT</h4><ul><li>Thiếu lịch phòng lab tuần 3</li></ul></div>
+            <div class="qbox block"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>BLOCKING</h4><ul><li>Không có mục chặn</li></ul></div>
+          </div>
+          <div class="eyebrow" style="margin-bottom:6px">Execution log trace</div>
+          <div class="logtrace">
+            <span class="capid">schedule_feasibility_check</span> · started<br>
+            Feasibility: fetching student profiles…<br>
+            Feasibility: checking device availability…<br>
+            Output validated by schema ✓
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+      <a class="btn btn-ghost" href="workspace.html">Quay lại chat</a>
+      <button class="btn btn-primary" onclick="toast('Bản mẫu: xuất kết quả')">Xuất kết quả</button>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

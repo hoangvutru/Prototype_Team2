@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trang chủ · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="student" data-active="dashboard" data-title="Trang chủ">
+  <main class="page-content">
+    <div class="row" data-nowrap style="flex-wrap:nowrap;align-items:stretch;margin-bottom:24px">
+      <div class="card card-pad" style="flex:1.6;min-width:300px">
+        <div class="sect-title" style="margin-bottom:16px"><h2>Dự án đang thực hiện</h2><span class="badge b-brand" style="margin-left:auto">Bản v3</span></div>
+        <div class="hero-proj">
+          <div class="donut">
+            <svg viewBox="0 0 128 128" width="128" height="128">
+              <circle cx="64" cy="64" r="54" fill="none" stroke="var(--sunken)" stroke-width="12"/>
+              <circle cx="64" cy="64" r="54" fill="none" stroke="var(--primary)" stroke-width="12" stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="108.6" transform="rotate(-90 64 64)"/>
+            </svg>
+            <div class="lbl"><b>42%</b><span>Hoàn thành</span></div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <h3 style="font-size:16px;margin-bottom:14px">Camera phát hiện rác tự động</h3>
+            <div class="mbar-row"><span class="ml">Mốc tiến độ</span><span class="pbar" style="flex:1"><i style="width:42%"></i></span><span class="mv">3/7</span></div>
+            <div class="mbar-row"><span class="ml">Minh chứng đã có</span><span class="pbar" style="flex:1"><i style="width:55%;background:var(--accent)"></i></span><span class="mv">6/11</span></div>
+            <div class="mbar-row"><span class="ml">Lưu ý đã xử lý</span><span class="pbar" style="flex:1"><i style="width:30%;background:var(--amber)"></i></span><span class="mv">2/6</span></div>
+            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+              <a class="btn btn-primary btn-sm" href="plan.html">Tiếp tục làm kế hoạch</a>
+              <a class="btn btn-ghost btn-sm" href="agent-review.html">Xem nhận xét AI</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-pad" style="flex:1;min-width:240px">
+        <div class="sect-title" style="margin-bottom:10px"><h2>Hoạt động gần đây</h2></div>
+        <div class="actlog">
+          <div class="it"><span class="d"></span><div>Trợ lý tạo bản nháp kế hoạch mới</div><span class="tm">3 giờ trước</span></div>
+          <div class="it"><span class="d" style="background:var(--amber)"></span><div>Cần bổ sung lịch phòng lab</div><span class="tm">2 giờ trước</span></div>
+          <div class="it"><span class="d" style="background:var(--accent)"></span><div>Em đã nộp báo cáo Mốc 2</div><span class="tm">1 giờ trước</span></div>
+          <div class="it"><span class="d" style="background:var(--green)"></span><div>Giáo viên xác nhận Mốc 1</div><span class="tm">Hôm qua</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect-title"><h2>Trợ lý AI đang hỗ trợ</h2><span class="hint">Giáo viên/quản trị là người bật hoặc tắt trợ lý khi cần</span></div>
+    <div class="agent-status" style="margin-bottom:26px">
+      <a class="card as-card" href="agent-review.html">
+        <div class="h"><span class="ic" style="background:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg></span><span class="nm">Trợ lý Thiết kế kế hoạch</span><span class="pill-onoff on">ĐANG HỖ TRỢ</span></div>
+        <div class="desc">Giúp biến ý tưởng thành kế hoạch rõ ràng: mục tiêu, phạm vi, mốc, chỉ số.</div>
+        <div class="f"><span class="health ok">Hoạt động tốt</span><span class="btn btn-ghost btn-sm" style="margin-left:auto">Xem nhận xét</span></div>
+      </a>
+      <a class="card as-card" href="agent-review.html">
+        <div class="h"><span class="ic" style="background:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 5-6"/></svg></span><span class="nm">Trợ lý Khả thi & năng lực</span><span class="pill-onoff on">ĐANG HỖ TRỢ</span></div>
+        <div class="desc">Xem nhóm có đủ kỹ năng, thời gian, thiết bị để thực hiện kế hoạch hay không.</div>
+        <div class="f"><span class="health ok">Hoạt động tốt</span><span class="btn btn-ghost btn-sm" style="margin-left:auto">Xem nhận xét</span></div>
+      </a>
+      <a class="card as-card" href="agent-review.html">
+        <div class="h"><span class="ic" style="background:var(--primary)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3Z"/></svg></span><span class="nm">Trợ lý An toàn</span><span class="pill-onoff on">ĐANG HỖ TRỢ</span></div>
+        <div class="desc">Nhắc các điều kiện an toàn, quyền riêng tư và quy định của trường.</div>
+        <div class="f"><span class="health ok">Hoạt động tốt</span><span class="btn btn-ghost btn-sm" style="margin-left:auto">Xem nhận xét</span></div>
+      </a>
+      <a class="card as-card off" href="agent-review.html">
+        <div class="h"><span class="ic" style="background:var(--slate)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><span class="nm">Trợ lý Tiến độ</span><span class="pill-onoff off">TẠM TẮT</span></div>
+        <div class="desc">Đối chiếu báo cáo &amp; minh chứng với kế hoạch. Đang tắt nên phần này ghi "Chưa được kiểm tra".</div>
+        <div class="f"><span class="health off">Giáo viên đã tắt</span><span class="btn btn-ghost btn-sm" style="margin-left:auto">Xem</span></div>
+      </a>
+    </div>
+
+    <div class="sect-title"><h2>Việc em cần làm</h2></div>
+    <div class="row" data-nowrap style="flex-wrap:nowrap">
+      <div class="alert-box warn" style="flex:1;min-width:240px">
+        <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>Lưu ý từ trợ lý</h4>
+        <ul><li>Khối lượng huấn luyện mô hình có thể vượt thời gian — nên cân nhắc thu hẹp.</li><li>Chỉ số "độ chính xác cao" còn chung chung — nên nêu con số cụ thể.</li><li>Chưa hoàn tất bước "đồng ý sử dụng hình ảnh".</li></ul>
+      </div>
+      <div class="alert-box needs" style="flex:1;min-width:240px">
+        <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Cần em bổ sung</h4>
+        <ul><li>Thêm lịch phòng lab tuần 3 để trợ lý kiểm tra thời gian.</li><li>Tải lên tệp minh chứng cho Mốc 2.</li><li>Xem lại 1 nội dung nằm ngoài phạm vi Capstone.</li></ul>
+      </div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

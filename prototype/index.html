@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capstone AI — Bản mẫu</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="launch">
+    <div class="hero">
+      <div class="logo">C</div>
+      <h1>Capstone <b>AI</b></h1>
+      <p>Bản mẫu giao diện hệ thống multi-agent hỗ trợ dự án Capstone — Vinschool. Chọn một vai trò để xem luồng màn hình.</p>
+      <div style="margin-top:16px">
+        <button class="btn btn-ghost btn-sm" onclick="var r=document.documentElement;if(r.getAttribute('data-theme')==='light'){r.removeAttribute('data-theme');localStorage.setItem('cai-theme','dark')}else{r.setAttribute('data-theme','light');localStorage.setItem('cai-theme','light')}"><i data-lucide="sun-moon"></i>Đổi sáng / tối</button>
+      </div>
+    </div>
+    <div class="role-grid">
+      <a class="card role-card" href="dashboard.html">
+        <div class="rc-ic" style="background:var(--primary)"><i data-lucide="graduation-cap"></i></div>
+        <h3>Học sinh</h3>
+        <p>Thiết kế kế hoạch, xem nhận xét từ trợ lý AI, nộp minh chứng, gửi phê duyệt cho giáo viên.</p>
+        <span class="go">Vào giao diện học sinh <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="card role-card" href="teacher-dashboard.html">
+        <div class="rc-ic" style="background:var(--accent)"><i data-lucide="presentation"></i></div>
+        <h3>Giáo viên</h3>
+        <p>Theo dõi nhiều nhóm, đối chiếu minh chứng với rubric, xác nhận đạt, phê duyệt / yêu cầu sửa / từ chối.</p>
+        <span class="go">Vào giao diện giáo viên <i data-lucide="arrow-right"></i></span>
+      </a>
+      <a class="card role-card" href="agents.html">
+        <div class="rc-ic" style="background:var(--violet)"><i data-lucide="shield-check"></i></div>
+        <h3>Quản trị</h3>
+        <p>Quản lý agent (bật/tắt), đăng ký agent bên ngoài qua wizard + boundary test, xem Manifest &amp; Audit Log.</p>
+        <span class="go">Vào giao diện quản trị <i data-lucide="arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script>try{lucide.createIcons()}catch(e){}</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bảng điều khiển GV · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="teacher" data-active="teacher-dashboard" data-title="Bảng điều khiển giáo viên">
+  <main class="page-content">
+    <div class="kpi" style="margin-bottom:22px">
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Nhóm đang theo dõi</div><div class="v">12</div></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Chờ phê duyệt</div><div class="v" style="color:var(--amber-ink)">4</div></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="var(--red)"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>Có cảnh báo an toàn</div><div class="v" style="color:var(--red-ink)">2</div></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="var(--slate)"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>Thiếu minh chứng</div><div class="v" style="color:var(--slate-ink)">5</div></div>
+    </div>
+    <div class="sect-title"><h2>Tổng hợp các nhóm</h2><span class="hint">Bấm một nhóm để xem chi tiết</span></div>
+    <div class="card" style="overflow:hidden"><div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Nhóm</th><th>Phiên bản</th><th>Feasibility</th><th>Safety</th><th>Tiến độ</th><th>Trạng thái</th></tr></thead>
+        <tbody>
+          <tr onclick="go('teacher-group.html')">
+            <td><div class="grp-name">Nhóm 4 — Camera phát hiện rác<small>11A2 · 4 thành viên</small></div></td>
+            <td class="mono">v3</td><td><span class="badge b-needs"><span class="bd"></span>Cần bổ sung</span></td>
+            <td><span class="badge b-partial"><span class="bd"></span>Cần điều kiện</span></td><td>3/7 mốc</td>
+            <td><span class="badge b-needs">Chờ duyệt</span></td>
+          </tr>
+          <tr onclick="go('teacher-group.html')">
+            <td><div class="grp-name">Nhóm 1 — Vườn trường thông minh<small>11A2 · 5 thành viên</small></div></td>
+            <td class="mono">v5</td><td><span class="badge b-pass"><span class="bd"></span>Đạt</span></td>
+            <td><span class="badge b-pass"><span class="bd"></span>Đạt</span></td><td>5/7 mốc</td>
+            <td><span class="badge b-pass"><span class="bd"></span>Đã duyệt</span></td>
+          </tr>
+          <tr onclick="go('teacher-group.html')">
+            <td><div class="grp-name">Nhóm 7 — Ứng dụng học từ vựng<small>11A3 · 3 thành viên</small></div></td>
+            <td class="mono">v2</td><td><span class="badge b-unchecked"><span class="bd"></span>Chưa kiểm tra</span></td>
+            <td><span class="badge b-out"><span class="bd"></span>Cần xử lý</span></td><td>1/6 mốc</td>
+            <td><span class="badge b-out"><span class="bd"></span>Cần sửa</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    <div class="callout grey" style="margin-top:16px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Nhóm 7 để <b>Feasibility Agent tắt</b> → hiển thị "Chưa kiểm tra", hệ thống không suy diễn PASS. Dashboard chỉ tổng hợp, không tự xếp hạng năng lực học sinh.</div></div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

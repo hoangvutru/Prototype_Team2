@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gửi phê duyệt · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="student" data-active="approval" data-title="Gửi phê duyệt">
+  <main class="page-content">
+    <div class="sect-title"><h2>Gửi kế hoạch cho giáo viên</h2></div>
+    <div class="card card-pad">
+      <div class="kv"><span class="k">Bản kế hoạch gửi đi</span><span class="v">Bản v3</span></div>
+      <div class="kv"><span class="k">Trợ lý Thiết kế (rõ ràng &amp; nhất quán)</span><span class="badge b-pass"><span class="bd"></span>Đạt</span></div>
+      <div class="kv"><span class="k">Trợ lý Khả thi &amp; năng lực</span><span class="badge b-needs"><span class="bd"></span>Cần bổ sung</span></div>
+      <div class="kv"><span class="k">Trợ lý An toàn</span><span class="badge b-partial"><span class="bd"></span>Cần điều kiện</span></div>
+      <div class="kv"><span class="k">Bước đồng ý sử dụng hình ảnh</span><span class="badge b-out"><span class="bd"></span>Chưa hoàn tất</span></div>
+    </div>
+    <div class="callout warn" style="margin-top:16px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Vẫn còn cảnh báo chưa xử lý. Bạn <b>vẫn có thể gửi</b> — quyết định phê duyệt là của giáo viên, hệ thống không tự chặn hay tự duyệt thay.</div></div>
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+      <a class="btn btn-ghost" href="agent-review.html">Quay lại xử lý cảnh báo</a>
+      <button class="btn btn-accent" onclick="confirmSend()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>Gửi cho giáo viên</button>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

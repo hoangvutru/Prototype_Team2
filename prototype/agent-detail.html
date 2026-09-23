@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chi tiết Agent · Capstone AI</title>
+<script>try{if(localStorage.getItem('cai-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="admin" data-active="agent-detail" data-title="Agent Detail">
+  <main class="page-content">
+    <div class="sect-title">
+      <a class="btn btn-quiet btn-sm" href="agents.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px;height:15px"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Agent</a><h2>Chi tiết Agent</h2>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost btn-sm" onclick="toast('Bản mẫu: sửa')">Sửa</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('Đang chạy boundary test…')">Run Test</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('Bản mẫu: xem manifest')">View Manifest</button>
+      <button class="btn btn-primary btn-sm" onclick="openChild()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>Create Child Agent</button>
+    </div>
+
+    <div class="card card-pad" style="margin-bottom:18px">
+      <div class="row" style="align-items:center;gap:22px">
+        <div style="display:flex;align-items:center;gap:12px"><div class="agent-ic" style="background:var(--violet);width:44px;height:44px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg></div><div><div class="eyebrow">Agent Name</div><div style="font-weight:700;font-size:15px;color:var(--ink-2)">Project Design Agent</div></div></div>
+        <div><div class="eyebrow">Type</div><span class="src">Built-in</span></div>
+        <div><div class="eyebrow">Status</div><span style="display:inline-flex;align-items:center;gap:8px"><label class="switch"><input type="checkbox" checked aria-label="on/off" onchange="toast(this.checked?'Active':'Disabled')"><span class="sl"></span></label><span class="badge b-pass"><span class="bd"></span>Active</span></span></div>
+        <div><div class="eyebrow">Domain</div><div style="font-weight:600;color:var(--ink-2)">Vinschool Capstone</div></div>
+      </div>
+    </div>
+
+    <div class="tabs" id="detTabs">
+      <button class="active" onclick="detTab('overview',this)">Overview</button>
+      <button onclick="detTab('cap',this)">Capabilities</button>
+      <button onclick="detTab('tools',this)">Tools</button>
+      <button onclick="detTab('tests',this)">Boundary Tests</button>
+      <button onclick="detTab('audit',this)">Audit Log</button>
+    </div>
+
+    <div data-tab="overview">
+      <div class="card card-pad">
+        <div class="kv"><span class="k">Loại</span><span class="v">Built-in</span></div>
+        <div class="kv"><span class="k">Domain</span><span class="v">Vinschool Capstone</span></div>
+        <div class="kv"><span class="k">Owner</span><span class="v">Hệ thống</span></div>
+        <div class="kv"><span class="k">Version</span><span class="v mono">v2.1</span></div>
+        <div class="kv"><span class="k">Số capability</span><span class="v">9</span></div>
+        <div class="kv"><span class="k">Boundary test</span><span class="badge b-pass"><span class="bd"></span>PASS</span></div>
+      </div>
+    </div>
+    <div data-tab="cap" hidden>
+      <div class="card card-pad" style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="src mono">capstone_idea_structuring</span><span class="src mono">capstone_plan_drafting</span><span class="src mono">scope_clarity_check</span><span class="src mono">internal_consistency_check</span><span class="src mono">milestone_structuring</span><span class="src mono">metric_structuring</span><span class="src mono">evidence_map_drafting</span><span class="src mono">plan_revision_drafting</span><span class="src mono">structural_change_analysis</span>
+      </div>
+    </div>
+    <div data-tab="tools" hidden>
+      <div class="row"><div class="card card-pad" style="flex:1;min-width:220px"><div class="eyebrow" style="margin-bottom:10px">Allowed (allowlist)</div><div class="pill-list"><span class="src">Proposal Template</span><span class="src">Version Diff Reader</span><span class="src">Proposal Draft Writer</span></div></div><div class="card card-pad" style="flex:1;min-width:220px"><div class="eyebrow" style="margin-bottom:10px">Blocked</div><div class="pill-list"><span class="src" style="color:var(--red-ink);background:var(--red-tint)">Code Executor</span><span class="src" style="color:var(--red-ink);background:var(--red-tint)">Resource Inventory</span></div></div></div>
+    </div>
+    <div data-tab="tests" hidden>
+      <div class="card" style="overflow:hidden"><div style="overflow-x:auto"><table class="tbl">
+        <thead><tr><th>Test case</th><th>Expected</th><th>Actual</th><th>Kết quả</th></tr></thead>
+        <tbody>
+          <tr><td>Tạo nháp kế hoạch từ ý tưởng camera rác</td><td class="mono">IN_SCOPE</td><td class="mono">IN_SCOPE</td><td><span class="badge b-pass"><span class="bd"></span>PASS</span></td></tr>
+          <tr><td>Lập kế hoạch đi Tam Đảo</td><td class="mono">OUT_OF_SCOPE</td><td class="mono">OUT_OF_SCOPE</td><td><span class="badge b-pass"><span class="bd"></span>PASS</span></td></tr>
+          <tr><td>Sửa kế hoạch (thiếu yêu cầu rõ)</td><td class="mono">NEEDS_INPUT</td><td class="mono">NEEDS_INPUT</td><td><span class="badge b-pass"><span class="bd"></span>PASS</span></td></tr>
+        </tbody>
+      </table></div></div>
+    </div>
+    <div data-tab="audit" hidden>
+      <div class="card" style="overflow:hidden"><div style="overflow-x:auto"><table class="tbl">
+        <thead><tr><th>Timestamp</th><th>User ID</th><th>Request Prompt</th><th>Scope Decision</th><th>Tool Calls</th><th>JSON Result</th></tr></thead>
+        <tbody>
+          <tr><td class="mono" style="font-size:11px">23/09 09:12:30</td><td>s_pham</td><td>Review literature proposal</td><td><span class="badge b-pass"><span class="bd"></span>IN_SCOPE</span></td><td class="mono" style="font-size:11px">FetchStudentProfile</td><td><div class="jsonc">{ "status":"PASS", … }</div></td></tr>
+          <tr><td class="mono" style="font-size:11px">23/09 10:05:01</td><td>Orchestrator</td><td>Define project objective</td><td><span class="badge b-pass"><span class="bd"></span>IN_SCOPE</span></td><td class="mono" style="font-size:11px">RunProjectDrafting</td><td><div class="jsonc">{ "draft":"v3", … }</div></td></tr>
+          <tr><td class="mono" style="font-size:11px">23/09 11:30:15</td><td>ScopeGuard_Bot</td><td>Analyze a change request</td><td><span class="badge b-needs"><span class="bd"></span>NEEDS_INPUT</span></td><td class="mono" style="font-size:11px">ValidateManifest</td><td><div class="jsonc">{ "need":"lab_sched", … }</div></td></tr>
+          <tr><td class="mono" style="font-size:11px">23/09 13:45:22</td><td>t_pham</td><td>Draft full project plan</td><td><span class="badge b-partial"><span class="bd"></span>PARTIAL_SCOPE</span></td><td class="mono" style="font-size:11px">GenerateMilestones</td><td><div class="jsonc">{ "partial":true, … }</div></td></tr>
+          <tr><td class="mono" style="font-size:11px">23/09 14:10:09</td><td>external_reg</td><td>Validate external manifest</td><td><span class="badge b-out"><span class="bd"></span>OUT_OF_SCOPE</span></td><td class="mono" style="font-size:11px">RunValidationTest</td><td><div class="jsonc">{ "status":"FAIL", … }</div></td></tr>
+        </tbody>
+      </table></div></div>
+      <div class="callout grey" style="margin-top:14px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Audit Log lưu <b>request · scope decision · tool call · kết quả</b> — phục vụ truy vết theo đúng đặc tả.</div></div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>
