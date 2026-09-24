@@ -9,6 +9,154 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+/* ── Floating Chat Drawer ── */
+#tvFab{
+  position:fixed;bottom:28px;right:28px;z-index:200;
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary-hover),var(--primary-deep));
+  border:none;box-shadow:0 4px 24px rgba(0,0,0,.45),var(--glow);
+  color:#1A1206;display:grid;place-items:center;cursor:pointer;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+}
+#tvFab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(0,0,0,.5),var(--glow)}
+#tvFab .ico-open,#tvFab .ico-close{
+  position:absolute;width:24px;height:24px;
+  transition:opacity .2s,transform .25s cubic-bezier(.4,0,.2,1);
+}
+#tvFab .ico-close{opacity:0;transform:rotate(-90deg) scale(.7)}
+#tvFab.open .ico-open{opacity:0;transform:rotate(90deg) scale(.7)}
+#tvFab.open .ico-close{opacity:1;transform:rotate(0deg) scale(1)}
+.fab-badge{
+  position:absolute;top:-2px;right:-2px;width:18px;height:18px;
+  border-radius:50%;background:var(--red);color:#fff;font-size:10px;font-weight:800;
+  display:grid;place-items:center;border:2px solid var(--ground);
+  transition:transform .2s,opacity .2s;
+}
+#tvFab.open .fab-badge{transform:scale(0);opacity:0}
+#tvScrim{
+  display:none; /* scrim disabled – page stays visible behind drawer */
+}
+#tvDrawer{
+  position:fixed;top:0;right:0;bottom:0;width:420px;max-width:85vw;min-width:300px;
+  z-index:200;background:var(--surface);border-left:1px solid var(--border-strong);
+  display:flex;flex-direction:column;
+  transform:translateX(110%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  box-shadow:-8px 0 48px rgba(0,0,0,.35);
+}
+#tvDrawer.open{transform:translateX(0)}
+/* Resize handle */
+#tvResizer{
+  position:absolute;left:0;top:0;bottom:0;width:6px;cursor:col-resize;
+  z-index:10;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+#tvResizer:hover,#tvResizer.dragging{
+  background:color-mix(in srgb,var(--primary) 30%,transparent);
+}
+#tvResizer::after{
+  content:'';width:3px;height:40px;border-radius:99px;
+  background:var(--border-strong);transition:background .15s;
+}
+#tvResizer:hover::after,#tvResizer.dragging::after{background:var(--primary)}
+.tv-header{
+  display:flex;align-items:center;gap:12px;padding:16px 18px;
+  border-bottom:1px solid var(--border);flex:none;background:var(--ground);
+}
+.tv-logo{
+  width:36px;height:36px;border-radius:10px;flex:none;
+  background:linear-gradient(135deg,var(--primary-hover),var(--primary-deep));
+  display:grid;place-items:center;color:#1A1206;
+}
+.tv-logo svg{width:18px;height:18px;stroke-width:2.2}
+.tv-title{flex:1;min-width:0}
+.tv-title strong{display:block;font-size:14px;font-weight:700;color:var(--ink-2)}
+.tv-title span{font-size:11.5px;color:var(--faint)}
+.tv-close{
+  width:34px;height:34px;border-radius:8px;flex:none;
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:.14s;
+}
+.tv-close:hover{background:var(--sunken);color:var(--ink-2)}
+.tv-close svg{width:16px;height:16px;stroke-width:2}
+.tv-chips{
+  padding:12px 16px;display:flex;flex-wrap:wrap;gap:7px;
+  border-bottom:1px solid var(--border);flex:none;background:var(--ground);
+}
+.tv-chip{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 12px;
+  border-radius:20px;font-size:12px;font-weight:600;
+  background:var(--surface-2);border:1px solid var(--border-strong);color:var(--ink);
+  cursor:pointer;transition:.14s;white-space:nowrap;
+}
+.tv-chip:hover{background:var(--primary-tint);border-color:color-mix(in srgb,var(--primary) 50%,transparent);color:var(--primary-ink)}
+.tv-messages{
+  flex:1;overflow-y:auto;padding:20px 16px;
+  display:flex;flex-direction:column;gap:18px;scroll-behavior:smooth;
+}
+.tv-messages::-webkit-scrollbar{width:5px}
+.tv-messages::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+.tv-msg{display:flex;gap:10px;align-items:flex-start;animation:tvfade .25s ease}
+@keyframes tvfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tv-msg.user{flex-direction:row-reverse}
+.tv-avatar{
+  width:28px;height:28px;border-radius:50%;flex:none;margin-top:2px;
+  display:grid;place-items:center;font-size:11px;font-weight:700;
+  background:var(--primary-tint);color:var(--primary-ink);
+}
+.tv-msg.user .tv-avatar{background:var(--accent-tint);color:var(--accent-ink)}
+.tv-bwrap{display:flex;flex-direction:column;gap:4px;max-width:calc(100% - 44px)}
+.tv-msg.user .tv-bwrap{align-items:flex-end}
+.tv-aname{font-size:10.5px;font-weight:700;color:var(--primary-ink);padding-left:2px}
+.tv-bubble{
+  padding:11px 15px;border-radius:18px;font-size:13.5px;line-height:1.6;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-top-left-radius:4px;color:var(--ink);
+}
+.tv-msg.user .tv-bubble{
+  background:var(--accent-tint);
+  border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);
+  border-top-right-radius:4px;border-top-left-radius:18px;color:var(--accent-ink);
+}
+.tv-typing{display:flex;gap:5px;align-items:center;padding:2px 0}
+.tv-typing span{
+  width:7px;height:7px;border-radius:50%;background:var(--muted);
+  animation:tvbounce 1.2s infinite ease-in-out;
+}
+.tv-typing span:nth-child(2){animation-delay:.2s}
+.tv-typing span:nth-child(3){animation-delay:.4s}
+@keyframes tvbounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
+.tv-composer{
+  padding:14px 16px;border-top:1px solid var(--border);
+  background:var(--ground);flex:none;
+}
+.tv-composer-box{
+  display:flex;align-items:flex-end;gap:10px;
+  background:var(--surface-2);border:1.5px solid var(--border-strong);
+  border-radius:16px;padding:10px 10px 10px 16px;
+  transition:border-color .15s,box-shadow .15s;
+}
+.tv-composer-box:focus-within{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent);
+}
+.tv-composer-box textarea{
+  flex:1;background:transparent;border:none;outline:none;
+  font:inherit;font-size:13.5px;color:var(--ink);
+  resize:none;max-height:120px;min-height:22px;line-height:1.5;
+}
+.tv-composer-box textarea::placeholder{color:var(--faint)}
+.tv-send{
+  width:36px;height:36px;border-radius:50%;flex:none;
+  background:var(--primary);border:none;color:#1A1206;
+  display:grid;place-items:center;cursor:pointer;transition:.15s;
+}
+.tv-send:hover{filter:brightness(1.1);transform:scale(1.05)}
+.tv-send svg{width:15px;height:15px;stroke-width:2.5}
+.tv-footer{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.tv-footer .btn{font-size:11.5px;min-height:30px;padding:4px 11px}
+</style>
 </head>
 <body data-role="teacher" data-active="teacher-dashboard" data-title="Bảng điều khiển giáo viên">
   <main class="page-content">
@@ -45,7 +193,175 @@
       </table>
     </div></div>
     <div class="callout grey" style="margin-top:16px"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div>Nhóm 7 để <b>Feasibility Agent tắt</b> → hiển thị "Chưa kiểm tra", hệ thống không suy diễn PASS. Dashboard chỉ tổng hợp, không tự xếp hạng năng lực học sinh.</div></div>
+
+    <!-- FAB (inside page-content so app.js preserves it) -->
+    <button id="tvFab" aria-label="Mở trợ lý AI" onclick="tvToggle()">
+      <div class="fab-badge">2</div>
+      <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <!-- Scrim -->
+    <div id="tvScrim" onclick="tvClose()"></div>
+
+    <!-- Drawer -->
+    <div id="tvDrawer" role="dialog" aria-label="Trợ lý AI Giảng viên">
+    <div id="tvResizer" aria-hidden="true"></div>
+    <div class="tv-header">
+      <div class="tv-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
+      <div class="tv-title">
+        <strong>Trợ lý AI Giảng viên</strong>
+        <span>Orchestrator · Chế độ Giám sát</span>
+      </div>
+      <span class="badge b-pass" style="font-size:10.5px;flex:none"><span class="bd"></span>Trực tuyến</span>
+      <button class="tv-close" onclick="tvClose()" aria-label="Đóng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="tv-chips">
+      <button class="tv-chip" onclick="tvQuick('Tóm tắt tiến độ tất cả các nhóm hiện tại')">📊 Tổng hợp tiến độ</button>
+      <button class="tv-chip" onclick="tvQuick('Danh sách nhóm đang chờ phê duyệt và lý do')">⏳ Chờ duyệt</button>
+      <button class="tv-chip" onclick="tvQuick('Các cảnh báo an toàn cần xử lý ngay')">🔴 Cảnh báo</button>
+      <button class="tv-chip" onclick="tvQuick('Nhóm nào thiếu minh chứng và cần bổ sung gì?')">📎 Minh chứng</button>
+      <button class="tv-chip" onclick="tvQuick('Gợi ý nhận xét cho Nhóm 4 – Camera phát hiện rác')">💬 Nhận xét</button>
+    </div>
+    <div class="tv-messages" id="tvMessages">
+      <div class="tv-msg ai">
+        <div class="tv-avatar">AI</div>
+        <div class="tv-bwrap">
+          <div class="tv-aname">Orchestrator · Chế độ Giảng viên</div>
+          <div class="tv-bubble">Xin chào! Tôi có thể giúp bạn theo dõi <b>12 nhóm</b>, kiểm tra <b>4 yêu cầu chờ duyệt</b>, và xử lý <b>2 cảnh báo an toàn</b> đang mở.<br><br>Bạn muốn bắt đầu từ đâu?</div>
+        </div>
+      </div>
+      <div class="tv-msg ai">
+        <div class="tv-avatar" style="background:var(--red-tint);color:var(--red-ink)">⚠</div>
+        <div class="tv-bwrap">
+          <div class="tv-aname" style="color:var(--red-ink)">Safety Agent · Cảnh báo</div>
+          <div class="tv-bubble" style="background:var(--red-tint);border-color:color-mix(in srgb,var(--red) 35%,transparent);color:var(--red-ink)">⚠️ <b>Nhóm 7</b> có Feasibility Agent đang TẮT — không có kết quả đánh giá tính khả thi. Đề nghị yêu cầu nhóm bật lại trước khi nộp phiên bản tiếp theo.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tv-composer">
+      <div class="tv-composer-box">
+        <textarea id="tvInput" rows="1" placeholder="Hỏi về nhóm, tiến độ, phê duyệt…" aria-label="Nhập câu hỏi" oninput="tvResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();tvSend()}"></textarea>
+        <button class="tv-send" onclick="tvSend()" aria-label="Gửi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+      </div>
+      <div class="tv-footer">
+        <button class="btn btn-ghost btn-sm" onclick="toast('Bản mẫu: xuất báo cáo PDF')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Xuất báo cáo</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Bản mẫu: thông báo nhóm')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;stroke-width:2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>Thông báo</button>
+        <a class="btn btn-accent btn-sm" href="teacher-queue.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;stroke-width:2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Hàng chờ (4)</a>
+        <button class="btn btn-ghost btn-sm" style="color:var(--red-ink);margin-left:auto" onclick="tvClear()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;stroke-width:2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Xóa</button>
+      </div>
+    </div>
+    </div>
   </main>
+
+  <script>
+    const tvResp = {
+      'tóm tắt tiến độ tất cả các nhóm hiện tại':{who:'Orchestrator · Tổng hợp',clr:'',text:'<b>Tổng quan 12 nhóm:</b><br>• ✅ 5 nhóm đạt tiến độ tốt (&gt;4/7 mốc)<br>• ⚠️ 4 nhóm đang chờ phê duyệt<br>• 🔴 2 nhóm có cảnh báo an toàn cần xử lý<br>• 📎 5 nhóm thiếu minh chứng<br><br>Nhóm dẫn đầu: <b>Nhóm 1 – Vườn trường thông minh</b> (5/7 mốc, đã duyệt).'},
+      'danh sách nhóm đang chờ phê duyệt và lý do':{who:'Approval Agent',clr:'amber',text:'<b>4 yêu cầu chờ phê duyệt:</b><br>1. Nhóm 4 – Phiên bản v3 (Feasibility "Cần bổ sung")<br>2. Nhóm 2 – Điều chỉnh mục tiêu dự án<br>3. Nhóm 9 – Thêm thành viên mới<br>4. Nhóm 11 – Thay đổi thiết bị sử dụng<br><br>Bấm <b>Hàng chờ (4)</b> phía dưới để xử lý từng yêu cầu.'},
+      'các cảnh báo an toàn cần xử lý ngay':{who:'Safety Agent · Khẩn cấp',clr:'red',text:'<b>2 cảnh báo an toàn đang mở:</b><br><br>🔴 <b>Nhóm 7</b> – Dự án dùng camera quay khu vực riêng tư, chưa có consent form. <b>Cần dừng demo</b> cho đến khi có phê duyệt.<br><br>🟡 <b>Nhóm 3</b> – Module nhận dạng khuôn mặt cần được đánh giá PDPA trước khi chạy thử.'},
+      'nhóm nào thiếu minh chứng và cần bổ sung gì?':{who:'Evidence Agent',clr:'',text:'<b>5 nhóm thiếu minh chứng:</b><br>• Nhóm 4: Thiếu video demo và biên bản họp tuần 3<br>• Nhóm 6: Chưa nộp kết quả test phần cứng<br>• Nhóm 7: Thiếu tài liệu kỹ thuật<br>• Nhóm 10: Thiếu slide thuyết trình<br>• Nhóm 12: Chưa có phản hồi từ người dùng thử nghiệm'},
+      'gợi ý nhận xét cho nhóm 4 – camera phát hiện rác':{who:'Project Design Agent',clr:'',text:'<b>Gợi ý nhận xét cho Nhóm 4:</b><br><br>✅ Điểm mạnh: Ý tưởng thiết thực, có tính ứng dụng cao tại trường học.<br><br>⚠️ Cần cải thiện:<br>1. Làm rõ độ chính xác model (hiện tại chưa báo cáo)<br>2. Bổ sung kế hoạch triển khai thực tế<br>3. Xem xét điều kiện ánh sáng khi camera hoạt động ngoài trời<br><br>💡 Đề xuất: Yêu cầu nhóm nộp kết quả benchmark trước khi duyệt v3.'},
+    };
+
+    function tvToggle(){document.getElementById('tvFab').classList.contains('open')?tvClose():tvOpen()}
+    function tvOpen(){
+      document.getElementById('tvDrawer').classList.add('open');
+      document.getElementById('tvFab').classList.add('open');
+      setTimeout(()=>document.getElementById('tvInput').focus(),350);
+    }
+    function tvClose(){
+      document.getElementById('tvDrawer').classList.remove('open');
+      document.getElementById('tvFab').classList.remove('open');
+    }
+    /* ── Resize logic ── */
+    (function(){
+      const resizer=document.getElementById('tvResizer');
+      const drawer=document.getElementById('tvDrawer');
+      let startX,startW;
+      function onMove(e){
+        const cx=e.touches?e.touches[0].clientX:e.clientX;
+        const newW=startW+(startX-cx);
+        const minW=300, maxW=Math.round(window.innerWidth*0.85);
+        drawer.style.width=Math.min(maxW,Math.max(minW,newW))+'px';
+        drawer.style.transition='none';
+      }
+      function onUp(){
+        resizer.classList.remove('dragging');
+        document.body.style.userSelect='';
+        document.body.style.cursor='';
+        drawer.style.transition='';
+        window.removeEventListener('mousemove',onMove);
+        window.removeEventListener('mouseup',onUp);
+        window.removeEventListener('touchmove',onMove);
+        window.removeEventListener('touchend',onUp);
+      }
+      resizer.addEventListener('mousedown',function(e){
+        e.preventDefault();
+        startX=e.clientX;
+        startW=drawer.offsetWidth;
+        resizer.classList.add('dragging');
+        document.body.style.userSelect='none';
+        document.body.style.cursor='col-resize';
+        window.addEventListener('mousemove',onMove);
+        window.addEventListener('mouseup',onUp);
+      });
+      resizer.addEventListener('touchstart',function(e){
+        startX=e.touches[0].clientX;
+        startW=drawer.offsetWidth;
+        resizer.classList.add('dragging');
+        window.addEventListener('touchmove',onMove,{passive:false});
+        window.addEventListener('touchend',onUp);
+      },{passive:true});
+    })();
+    function tvResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
+    function tvAppend(role,html,who,clr){
+      const msgs=document.getElementById('tvMessages');
+      const w=document.createElement('div');w.className='tv-msg '+role;
+      const av=document.createElement('div');av.className='tv-avatar';
+      if(role==='ai'){
+        if(clr==='red'){av.textContent='⚠';av.style.cssText='background:var(--red-tint);color:var(--red-ink)'}
+        else if(clr==='amber'){av.textContent='⏳';av.style.cssText='background:var(--amber-tint);color:var(--amber-ink)'}
+        else av.textContent='AI';
+      } else av.textContent='GV';
+      const bw=document.createElement('div');bw.className='tv-bwrap';
+      if(role==='ai'&&who){
+        const n=document.createElement('div');n.className='tv-aname';
+        if(clr==='red')n.style.color='var(--red-ink)';
+        else if(clr==='amber')n.style.color='var(--amber-ink)';
+        n.textContent=who;bw.appendChild(n);
+      }
+      const b=document.createElement('div');b.className='tv-bubble';
+      if(clr==='red')b.style.cssText='background:var(--red-tint);border-color:color-mix(in srgb,var(--red) 35%,transparent);color:var(--red-ink)';
+      else if(clr==='amber')b.style.cssText='background:var(--amber-tint);border-color:color-mix(in srgb,var(--amber) 35%,transparent);color:var(--amber-ink)';
+      b.innerHTML=html;bw.appendChild(b);
+      w.appendChild(av);w.appendChild(bw);msgs.appendChild(w);
+      msgs.scrollTop=msgs.scrollHeight;
+    }
+    function tvSend(){
+      const inp=document.getElementById('tvInput');
+      const val=inp.value.trim();if(!val)return;
+      inp.value='';inp.style.height='auto';
+      tvAppend('user',val,null,null);
+      const msgs=document.getElementById('tvMessages');
+      const tw=document.createElement('div');tw.className='tv-msg ai';tw.id='tvTyping';
+      tw.innerHTML='<div class="tv-avatar">AI</div><div class="tv-bwrap"><div class="tv-aname">Orchestrator</div><div class="tv-bubble"><div class="tv-typing"><span></span><span></span><span></span></div></div></div>';
+      msgs.appendChild(tw);msgs.scrollTop=msgs.scrollHeight;
+      setTimeout(()=>{
+        const el=document.getElementById('tvTyping');if(el)el.remove();
+        const key=val.toLowerCase().trim().replace(/[?!.,]/g,'').replace(/\s+/g,' ');
+        const found=Object.keys(tvResp).find(k=>key.includes(k)||k.includes(key.substring(0,14)));
+        if(found){const r=tvResp[found];tvAppend('ai',r.text,r.who,r.clr)}
+        else tvAppend('ai','Tôi đã ghi nhận câu hỏi của bạn. Hãy thử một trong các <b>gợi ý nhanh</b> phía trên, hoặc hỏi cụ thể tên nhóm.','Orchestrator · Chế độ GV','');
+      },1000);
+    }
+    function tvQuick(text){tvOpen();document.getElementById('tvInput').value=text;tvSend()}
+    function tvClear(){
+      document.getElementById('tvMessages').innerHTML='';
+      tvAppend('ai','Cuộc hội thoại đã được xóa. Tôi sẵn sàng hỗ trợ bạn.','Orchestrator · Chế độ GV','');
+      toast('Đã xóa cuộc hội thoại');
+    }
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')tvClose()});
+  </script>
   <script src="assets/app.js"></script>
 </body>
 </html>

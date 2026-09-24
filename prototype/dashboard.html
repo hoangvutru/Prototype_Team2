@@ -9,6 +9,63 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ── Student floating chat drawer ── */
+  .s-fab{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));border:none;box-shadow:0 4px 22px rgba(92,168,255,.45),0 2px 8px rgba(0,0,0,.4);color:#fff;display:grid;place-items:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;}
+  .s-fab:hover{transform:scale(1.1);box-shadow:0 6px 30px rgba(92,168,255,.6)}
+  .s-fab .ico-open,.s-fab .ico-close{position:absolute;width:23px;height:23px;transition:opacity .2s,transform .25s cubic-bezier(.4,0,.2,1);}
+  .s-fab .ico-close{opacity:0;transform:rotate(-90deg) scale(.7)}
+  .s-fab.open .ico-open{opacity:0;transform:rotate(90deg) scale(.7)}
+  .s-fab.open .ico-close{opacity:1;transform:rotate(0deg) scale(1)}
+  .s-fab .fab-badge{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--primary);color:#1A1206;font-size:10px;font-weight:800;display:grid;place-items:center;border:2px solid var(--ground);transition:transform .2s,opacity .2s;}
+  .s-fab.open .fab-badge{transform:scale(0);opacity:0}
+  #sDrawer{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:85vw;min-width:300px;z-index:200;background:var(--surface);border-left:1px solid var(--border-strong);display:flex;flex-direction:column;transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 48px rgba(0,0,0,.35);}
+  #sDrawer.open{transform:translateX(0)}
+  #sResizer{position:absolute;left:0;top:0;bottom:0;width:6px;cursor:col-resize;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  #sResizer:hover,#sResizer.dragging{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+  #sResizer::after{content:'';width:3px;height:40px;border-radius:99px;background:var(--border-strong);transition:background .15s;}
+  #sResizer:hover::after,#sResizer.dragging::after{background:var(--accent)}
+  .s-head{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--border);flex:none;background:var(--ground);}
+  .s-logo{width:34px;height:34px;border-radius:10px;flex:none;background:linear-gradient(135deg,var(--accent),var(--accent-deep));display:grid;place-items:center;color:#fff;}
+  .s-logo svg{width:17px;height:17px;stroke-width:2.2}
+  .s-htitle{flex:1;min-width:0}
+  .s-htitle strong{display:block;font-size:13.5px;font-weight:700;color:var(--ink-2)}
+  .s-htitle span{font-size:11px;color:var(--faint)}
+  .s-close{width:32px;height:32px;border-radius:8px;flex:none;background:transparent;border:1px solid var(--border);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:.14s;}
+  .s-close:hover{background:var(--sunken);color:var(--ink-2)}
+  .s-close svg{width:15px;height:15px;stroke-width:2}
+  .s-chips{padding:11px 15px;display:flex;flex-wrap:wrap;gap:7px;border-bottom:1px solid var(--border);flex:none;background:var(--ground);}
+  .s-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:11.5px;font-weight:600;background:var(--surface-2);border:1px solid var(--border-strong);color:var(--ink);cursor:pointer;transition:.14s;white-space:nowrap;}
+  .s-chip:hover{background:var(--accent-tint);border-color:color-mix(in srgb,var(--accent) 50%,transparent);color:var(--accent-ink)}
+  .s-messages{flex:1;overflow-y:auto;padding:18px 15px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;}
+  .s-messages::-webkit-scrollbar{width:5px}
+  .s-messages::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+  .s-msg{display:flex;gap:9px;align-items:flex-start;animation:sfade .25s ease}
+  @keyframes sfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .s-msg.user{flex-direction:row-reverse}
+  .s-av{width:27px;height:27px;border-radius:50%;flex:none;margin-top:2px;display:grid;place-items:center;font-size:10.5px;font-weight:700;background:var(--accent-tint);color:var(--accent-ink);}
+  .s-msg.user .s-av{background:var(--primary-tint);color:var(--primary-ink)}
+  .s-bwrap{display:flex;flex-direction:column;gap:3px;max-width:calc(100% - 42px)}
+  .s-msg.user .s-bwrap{align-items:flex-end}
+  .s-who{font-size:10px;font-weight:700;color:var(--accent-ink);padding-left:2px}
+  .s-bubble{padding:10px 14px;border-radius:18px;font-size:13px;line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-top-left-radius:4px;color:var(--ink);}
+  .s-msg.user .s-bubble{background:var(--primary-tint);border:1px solid color-mix(in srgb,var(--primary) 40%,transparent);border-top-right-radius:4px;border-top-left-radius:18px;color:var(--primary-ink);}
+  .s-typing{display:flex;gap:5px;align-items:center;padding:2px 0}
+  .s-typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:sbounce 1.2s infinite ease-in-out;}
+  .s-typing span:nth-child(2){animation-delay:.2s}
+  .s-typing span:nth-child(3){animation-delay:.4s}
+  @keyframes sbounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
+  .s-composer{padding:13px 15px;border-top:1px solid var(--border);background:var(--ground);flex:none;}
+  .s-composer-box{display:flex;align-items:flex-end;gap:9px;background:var(--surface-2);border:1.5px solid var(--border-strong);border-radius:14px;padding:9px 9px 9px 15px;transition:border-color .15s,box-shadow .15s;}
+  .s-composer-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);}
+  .s-composer-box textarea{flex:1;background:transparent;border:none;outline:none;font:inherit;font-size:13px;color:var(--ink);resize:none;max-height:120px;min-height:22px;line-height:1.5;}
+  .s-composer-box textarea::placeholder{color:var(--faint)}
+  .s-send{width:34px;height:34px;border-radius:50%;flex:none;background:var(--accent);border:none;color:#fff;display:grid;place-items:center;cursor:pointer;transition:.15s;}
+  .s-send:hover{filter:brightness(1.1);transform:scale(1.05)}
+  .s-send svg{width:14px;height:14px;stroke-width:2.5}
+  .s-footer{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+  .s-footer .btn{font-size:11px;min-height:28px;padding:3px 10px}
+</style>
 </head>
 <body data-role="student" data-active="dashboard" data-title="Trang chủ">
   <main class="page-content">
@@ -54,7 +111,7 @@
         <div class="f"><span class="health ok">Hoạt động tốt</span><span class="btn btn-ghost btn-sm" style="margin-left:auto">Xem nhận xét</span></div>
       </a>
       <a class="card as-card" href="agent-review.html">
-        <div class="h"><span class="ic" style="background:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 5-6"/></svg></span><span class="nm">Trợ lý Khả thi & năng lực</span><span class="pill-onoff on">ĐANG HỖ TRỢ</span></div>
+        <div class="h"><span class="ic" style="background:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 5-6"/></svg></span><span class="nm">Trợ lý Khả thi &amp; năng lực</span><span class="pill-onoff on">ĐANG HỖ TRỢ</span></div>
         <div class="desc">Xem nhóm có đủ kỹ năng, thời gian, thiết bị để thực hiện kế hoạch hay không.</div>
         <div class="f"><span class="health ok">Hoạt động tốt</span><span class="btn btn-ghost btn-sm" style="margin-left:auto">Xem nhận xét</span></div>
       </a>
@@ -78,6 +135,110 @@
       </div>
       <div class="alert-box needs" style="flex:1;min-width:240px">
         <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Cần em bổ sung</h4>
+        <ul><li>Thêm lịch phòng lab tuần 3 để trợ lý kiểm tra thời gian.</li><li>Tải lên tệp minh chứng cho Mốc 2.</li><li>Xem lại 1 nội dung nằm ngoài phạm vi Capstone.</li></ul>
+      </div>
+    </div>
+
+    <!-- Student floating chat drawer (inside .page-content so app.js keeps it) -->
+    <button class="s-fab" id="sFab" aria-label="Mở trợ lý AI" onclick="sToggle()">
+      <div class="fab-badge">3</div>
+      <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div id="sDrawer" role="dialog" aria-label="Trợ lý AI Học sinh">
+      <div id="sResizer" aria-hidden="true"></div>
+      <div class="s-head">
+        <div class="s-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="s-htitle">
+          <strong>Orchestrator · Trợ lý AI</strong>
+          <span>Tổng hợp dự án · Chế độ Học sinh</span>
+        </div>
+        <span class="badge b-pass" style="font-size:10px;flex:none"><span class="bd"></span>Trực tuyến</span>
+        <button class="s-close" onclick="sClose()" aria-label="Đóng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="s-chips">
+        <button class="s-chip" onclick="sQuick('Tóm tắt tiến độ dự án của nhóm tôi')">📊 Tóm tắt tiến độ</button>
+        <button class="s-chip" onclick="sQuick('Nhóm cần bổ sung minh chứng gì?')">📎 Minh chứng cần bổ sung</button>
+        <button class="s-chip" onclick="sQuick('Các lưu ý an toàn cần xử lý')">⚠️ Lưu ý an toàn</button>
+        <button class="s-chip" onclick="sQuick('Khi nào nhóm nên nộp phê duyệt?')">📤 Khi nào nộp duyệt</button>
+      </div>
+      <div class="s-messages" id="sMessages">
+        <div class="s-msg ai">
+          <div class="s-av">AI</div>
+          <div class="s-bwrap">
+            <div class="s-who">Orchestrator · Tổng hợp</div>
+            <div class="s-bubble">Xin chào! Dự án của bạn đang ở <b>42% tiến độ</b> (3/7 mốc). Có <b>3 việc cần làm</b> ngay hôm nay.<br><br>Bạn muốn hỏi gì?</div>
+          </div>
+        </div>
+        <div class="s-msg ai">
+          <div class="s-av" style="background:var(--amber-tint);color:var(--amber-ink)">⚠</div>
+          <div class="s-bwrap">
+            <div class="s-who" style="color:var(--amber-ink)">Safety Agent · Nhắc nhở</div>
+            <div class="s-bubble" style="background:var(--amber-tint);border-color:color-mix(in srgb,var(--amber) 35%,transparent);color:var(--amber-ink)">Chưa hoàn tất bước <b>"đồng ý sử dụng hình ảnh"</b>. Đây là yêu cầu bắt buộc trước khi chạy demo camera.</div>
+          </div>
+        </div>
+      </div>
+      <div class="s-composer">
+        <div class="s-composer-box">
+          <textarea id="sInput" rows="1" placeholder="Hỏi trợ lý về dự án…" aria-label="Nhập câu hỏi" oninput="sResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sSend()}"></textarea>
+          <button class="s-send" onclick="sSend()" aria-label="Gửi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        </div>
+        <div class="s-footer">
+          <a class="btn btn-primary btn-sm" href="plan.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:12px;height:12px;stroke-width:2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Sửa kế hoạch</a>
+          <a class="btn btn-ghost btn-sm" href="agent-review.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:12px;height:12px;stroke-width:2"><path d="M12 3l1.9 4.5L18.5 9 14 11l-2 4.5L10 11 5.5 9 10 7.5 12 3Z"/></svg>Xem nhận xét</a>
+          <button class="btn btn-ghost btn-sm" style="color:var(--red-ink);margin-left:auto" onclick="sClear()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:12px;height:12px;stroke-width:2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Xóa</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+  <script>
+    const sResp = {
+      'tóm tắt tiến độ dự án của nhóm tôi':{who:'Orchestrator · Tổng hợp',text:'<b>Tiến độ hiện tại:</b><br>• 📊 42% hoàn thành (3/7 mốc)<br>• 📎 6/11 minh chứng đã có<br>• ⚠️ 2/6 lưu ý đã xử lý<br><br>Mốc tiếp theo: <b>Mốc 4 – Huấn luyện mô hình lần 2</b>. Deadline: tuần sau.'},
+      'nhóm cần bổ sung minh chứng gì?':{who:'Progress & Evidence Agent',text:'<b>Minh chứng còn thiếu (5/11):</b><br>📎 Video demo mô hình lần 1<br>📎 Kết quả accuracy test xuất file<br>📎 Biên bản họp nhóm tuần 3<br>📎 Đơn đồng ý sử dụng hình ảnh<br>📎 Slide thuyết trình Mốc 3'},
+      'các lưu ý an toàn cần xử lý':{who:'Safety Agent',text:'<b>Lưu ý an toàn cần xử lý:</b><br><br>🔴 <b>Chưa có đơn đồng ý</b> sử dụng hình ảnh từ trường — bắt buộc trước khi demo camera<br><br>🟡 Cân nhắc thu hẹp phạm vi huấn luyện để không vượt thời gian cho phép'},
+      'khi nào nhóm nên nộp phê duyệt?':{who:'Approval Agent',text:'Dựa trên tiến độ hiện tại, nhóm nên nộp <b>sau khi hoàn thành Mốc 4</b>.<br><br>Checklist trước khi nộp:<br>✅ Hoàn tất tất cả minh chứng bắt buộc<br>✅ Xử lý lưu ý an toàn<br>⬜ Nộp đơn đồng ý sử dụng hình ảnh<br>⬜ Video demo đính kèm'},
+    };
+    function sToggle(){document.getElementById('sFab').classList.contains('open')?sClose():sOpen()}
+    function sOpen(){document.getElementById('sDrawer').classList.add('open');document.getElementById('sFab').classList.add('open');setTimeout(()=>document.getElementById('sInput').focus(),350);}
+    function sClose(){document.getElementById('sDrawer').classList.remove('open');document.getElementById('sFab').classList.remove('open');}
+    function sResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
+    function sAppend(role,html,who){
+      const msgs=document.getElementById('sMessages');
+      const w=document.createElement('div');w.className='s-msg '+role;
+      const av=document.createElement('div');av.className='s-av';av.textContent=role==='ai'?'AI':'HS';
+      const bw=document.createElement('div');bw.className='s-bwrap';
+      if(role==='ai'&&who){const n=document.createElement('div');n.className='s-who';n.textContent=who;bw.appendChild(n);}
+      const b=document.createElement('div');b.className='s-bubble';b.innerHTML=html;bw.appendChild(b);
+      w.appendChild(av);w.appendChild(bw);msgs.appendChild(w);msgs.scrollTop=msgs.scrollHeight;
+    }
+    function sSend(){
+      const inp=document.getElementById('sInput');const val=inp.value.trim();if(!val)return;
+      inp.value='';inp.style.height='auto';sAppend('user',val,null);
+      const msgs=document.getElementById('sMessages');
+      const tw=document.createElement('div');tw.className='s-msg ai';tw.id='sTyping';
+      tw.innerHTML='<div class="s-av">AI</div><div class="s-bwrap"><div class="s-who">Orchestrator</div><div class="s-bubble"><div class="s-typing"><span></span><span></span><span></span></div></div></div>';
+      msgs.appendChild(tw);msgs.scrollTop=msgs.scrollHeight;
+      setTimeout(()=>{
+        const el=document.getElementById('sTyping');if(el)el.remove();
+        const key=val.toLowerCase().trim().replace(/[?!.,]/g,'').replace(/\s+/g,' ');
+        const found=Object.keys(sResp).find(k=>key.includes(k)||k.includes(key.substring(0,14)));
+        if(found){const r=sResp[found];sAppend('ai',r.text,r.who);}
+        else sAppend('ai','Mình đã ghi nhận câu hỏi. Hãy thử các <b>gợi ý nhanh</b> phía trên nhé!','Orchestrator');
+      },1000);
+    }
+    function sQuick(text){sOpen();document.getElementById('sInput').value=text;sSend();}
+    function sClear(){document.getElementById('sMessages').innerHTML='';sAppend('ai','Cuộc hội thoại đã xóa. Mình sẵn sàng hỗ trợ!','Orchestrator');toast('Đã xóa cuộc hội thoại');}
+    (function(){
+      const r=document.getElementById('sResizer'),d=document.getElementById('sDrawer');let sx,sw;
+      function mv(e){const cx=e.touches?e.touches[0].clientX:e.clientX;const nw=sw+(sx-cx);d.style.width=Math.min(Math.round(window.innerWidth*.85),Math.max(300,nw))+'px';d.style.transition='none';}
+      function up(){r.classList.remove('dragging');document.body.style.userSelect='';document.body.style.cursor='';d.style.transition='';window.removeEventListener('mousemove',mv);window.removeEventListener('mouseup',up);}
+      r.addEventListener('mousedown',function(e){e.preventDefault();sx=e.clientX;sw=d.offsetWidth;r.classList.add('dragging');document.body.style.userSelect='none';document.body.style.cursor='col-resize';window.addEventListener('mousemove',mv);window.addEventListener('mouseup',up);});
+    })();
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')sClose()});
+  </script>
+</body>
+</html>" style="width:16px;height:16px;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Cần em bổ sung</h4>
         <ul><li>Thêm lịch phòng lab tuần 3 để trợ lý kiểm tra thời gian.</li><li>Tải lên tệp minh chứng cho Mốc 2.</li><li>Xem lại 1 nội dung nằm ngoài phạm vi Capstone.</li></ul>
       </div>
     </div>
